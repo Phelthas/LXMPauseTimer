@@ -11,8 +11,12 @@
 
 @interface ViewController ()
 
-@property (nonatomic, strong) UIButton *testButton;
+@property (nonatomic, weak) IBOutlet UIButton *testButton;
+@property (weak, nonatomic) IBOutlet UILabel *tipLabel;
+
+
 @property (nonatomic, strong) NSTimer *testTimer;
+@property (nonatomic, assign) NSInteger count;
 
 @end
 
@@ -20,13 +24,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    self.testButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-    self.testButton.backgroundColor = [UIColor orangeColor];
+    self.count = 0;
     [self.testButton addTarget:self action:@selector(handleTestButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.testButton];
-    
-    self.testTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(handleTestTimer:) userInfo:nil repeats:YES];
+    self.testTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTestTimer:) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,13 +40,16 @@
 - (void)handleTestButtonTapped:(UIButton *)sender {
     if ([self.testTimer lxm_isPaused]) {
         [self.testTimer lxm_continue];
+        [sender setTitle:@"pause" forState:UIControlStateNormal];
     } else {
         [self.testTimer lxm_pause];
+        [sender setTitle:@"continue" forState:UIControlStateNormal];
     }
 }
 
 - (void)handleTestTimer:(NSTimer *)sender {
-    NSLog(@"date is %@", [NSDate date]);
+    self.count++;
+    self.tipLabel.text = [NSString stringWithFormat:@"%@", @(self.count)];
 }
 
 @end
